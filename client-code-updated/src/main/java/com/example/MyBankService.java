@@ -8,6 +8,7 @@ import dtu.ws.fastmoney.*;
 import dtu.ws.fastmoney.Account;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class MyBankService {
 
@@ -22,7 +23,15 @@ public class MyBankService {
         user.setLastName(lastname);
 
         try {
+            List<AccountInfo> accountInfoList = bank.getAccounts();
+            for (AccountInfo accountInfo : accountInfoList){
+                if(accountInfo.getUser().getCprNumber() == user.getCprNumber()){
+                    return accountInfo.getAccountId();
+                }
+            }
             return bank.createAccountWithBalance(user,new BigDecimal(int1));
+
+
         } catch (BankServiceException_Exception e) {
             return "NO ACCOUNT CREATED";
         }
