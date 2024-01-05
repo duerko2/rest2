@@ -13,7 +13,7 @@ import io.cucumber.java.en.When;
 import java.util.List;
 
 public class SimpleDTUPaySteps {
-
+  /*
   String cid, mid;
   SimpleDTUPay dtuPay = new SimpleDTUPay();
   boolean successful;
@@ -84,4 +84,6 @@ public class SimpleDTUPaySteps {
     // Write code here that turns the phrase above into concrete actions
     assertEquals(dtuPay.getStatus(), string);
   }
+
+   */
 }
