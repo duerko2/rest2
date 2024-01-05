@@ -7,7 +7,10 @@ public class PaymentService {
 
   List<Payment> payments = new ArrayList<>();
 
-  public void addPayment(Payment p) { payments.add(p); }
+  public void addPayment(Payment p) {
+    payments.add(p);
+    payments.add(p);
+  }
 
   public List<Payment> getPayments() { return payments; }
 }

@@ -1,41 +1,34 @@
 package com.example;
 
 public class Payment {
-    String customer;
-    String merchant;
+  String customer;
+  String merchant;
 
-    int amount;
+  int amount;
 
-    public Payment() {
-    }
+  String status = "";
 
-    public Payment(int amount, String merchant, String customer) {
-        this.amount = amount;
-        this.merchant = merchant;
-        this.customer = customer;
-    }
+  public Payment() {}
 
-    public int getAmount() {
-        return amount;
-    }
+  public Payment(int amount, String merchant, String customer) {
+    this.amount = amount;
+    this.merchant = merchant;
+    this.customer = customer;
+  }
 
-    public String getCustomer() {
-        return customer;
-    }
+  public String getStatus() { return status; }
 
-    public String getMerchant() {
-        return merchant;
-    }
+  public int getAmount() { return amount; }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
+  public String getCustomer() { return customer; }
 
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
+  public String getMerchant() { return merchant; }
 
-    public void setMerchant(String merchant) {
-        this.merchant = merchant;
-    }
+  public void setStatus(String status) { this.status = status; }
+
+  public void setAmount(int amount) { this.amount = amount; }
+
+  public void setCustomer(String customer) { this.customer = customer; }
+
+  public void setMerchant(String merchant) { this.merchant = merchant; }
 }
