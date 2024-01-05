@@ -53,7 +53,20 @@ public class DTUPayService {
 
     }
 
-    public boolean pay(Integer int1, String merchantDTUPayId, String customerDTUPayId) {
-        throw new NotImplementedYetException();
+    public boolean pay(int amount, String merchant, String customer) {
+
+        Payment payment = new Payment(amount, merchant, customer);
+        Response res = target.path("/payment")
+                .request()
+                .post(Entity.entity(payment, "application/json"));
+
+        if (res.getStatus() == 200) {
+            status = "Complete";
+            return true;
+        } else {
+            status = res.readEntity(String.class);
+            return false;
+        }
     }
+
 }
