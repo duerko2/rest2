@@ -15,6 +15,7 @@ public class MyBankService {
     BankService bank = new BankServiceService().getBankServicePort();
 
     public String createAccount(String name, String lastname, String cpr, Integer int1) {
+        BankService bank = new BankServiceService().getBankServicePort();
 
         // SOAP Request to bank
         User user = new User();
@@ -33,15 +34,22 @@ public class MyBankService {
 
 
         } catch (BankServiceException_Exception e) {
-            return "NO ACCOUNT CREATED";
+            return "NO ACCOUNT CREATED"+e.getMessage();
         }
     }
 
     public Account getAccount(String customerBankId) {
+        BankService bank = new BankServiceService().getBankServicePort();
+
         try {
             return bank.getAccount(customerBankId);
         } catch (BankServiceException_Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void deleteAccount(String id) throws BankServiceException_Exception {
+        BankService bank = new BankServiceService().getBankServicePort();
+        bank.retireAccount(id);
     }
 }
