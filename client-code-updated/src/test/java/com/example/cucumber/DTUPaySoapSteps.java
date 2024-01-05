@@ -29,21 +29,21 @@ public class DTUPaySoapSteps {
     }
 
     @Given("that the customer is registered with DTU Pay")
-    public void that_the_customer_is_registered_with_dtu_pay() {
+    public void that_the_customer_is_registered_with_dtu_pay() throws NoSuchFieldException {
         // Write code here that turns the phrase above into concrete actions
         customerDTUPayId = dtuPayService.createAccount("name", "lastname", "1402easygg", customerBankId);
         assertNotNull(dtuPayService.getAccount(customerDTUPayId));
     }
 
     @Given("a merchant with a bank account with balance {int}")
-    public void a_merchant_with_a_bank_account_with_balance(int int1) {
+    public void a_merchant_with_a_bank_account_with_balance(int int1)  {
         // Write code here that turns the phrase above into concrete actions
         merchantBankId = myBankService.createAccount("merchantName", "merchantlastname", "1402easygg123", int1);
         assertTrue(myBankService.getAccount(merchantBankId).getBalance().equals(new BigDecimal(int1)));
     }
 
     @Given("that the merchant is registered with DTU Pay")
-    public void that_the_merchant_is_registered_with_dtu_pay() {
+    public void that_the_merchant_is_registered_with_dtu_pay() throws NoSuchFieldException {
         // Write code here that turns the phrase above into concrete actions
         merchantDTUPayId = dtuPayService.createAccount("name", "lastname", "1402easygg", merchantBankId);
         assertNotNull(dtuPayService.getAccount(merchantDTUPayId));

@@ -1,7 +1,12 @@
 package com.example;
 
 
-import com.example.dtu.ws.fastmoney.*;
+
+
+
+import dtu.ws.fastmoney.*;
+import dtu.ws.fastmoney.Account;
+
 import java.math.BigDecimal;
 
 public class MyBankService {
