@@ -8,8 +8,9 @@ public class AccountService {
     private  static  Map<String, Account> accountMap = new HashMap<>();
 
     public String createAccount(Account account){
-        accountMap.put(account.cpr,account);
-        return account.cpr;
+        accountMap.put(account.getCpr(),account);
+        System.out.println("Account created: " + account.getCpr());
+        return account.getCpr();
     }
 
     public Account getAccount(String accountId){

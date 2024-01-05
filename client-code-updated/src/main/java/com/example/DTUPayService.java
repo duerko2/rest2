@@ -1,6 +1,5 @@
 package com.example;
 
-import dtu.ws.fastmoney.*;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
@@ -15,14 +14,24 @@ public class DTUPayService {
     String status = "";
 
     public String createAccount(String name, String lastname, String s, String customerBankId) throws NoSuchFieldException {
-        Account account = new Account(name,lastname,s,customerBankId);
+        Account account = new Account();
+        account.setName(name);
+        account.setLastname(lastname);
+        account.setCpr(s);
+        account.setBankId(customerBankId);
+
+        var n = Entity.entity(account, "application/json");
+        System.out.println(n.toString());
+
         Response res = target.path("/account")
                 .request()
                 .post(Entity.entity(account, "application/json"));
+        System.out.println(res.getStatus());
 
         if (res.getStatus() == 200) {
             status = "Complete";
-            return res.readEntity(Account.class).cpr;
+            var returnValue = res.readEntity(String.class);
+            return returnValue;
         } else {
             status = res.readEntity(String.class);
             throw new NoSuchFieldException();
@@ -30,7 +39,17 @@ public class DTUPayService {
     }
 
     public Account getAccount(String customerDTUPayId) {
-        throw new NotImplementedYetException();
+        Response res = target.path("/account/"+customerDTUPayId)
+                .request()
+                .get();
+
+        if (res.getStatus() == 200) {
+            status = "Complete";
+            return res.readEntity(Account.class);
+        } else {
+            status = "error";
+            return null;
+        }
 
     }
 
