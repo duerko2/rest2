@@ -26,10 +26,11 @@ public class MyBankService {
         try {
             List<AccountInfo> accountInfoList = bank.getAccounts();
             for (AccountInfo accountInfo : accountInfoList){
-                if(accountInfo.getUser().getCprNumber() == user.getCprNumber()){
+                if(accountInfo.getUser().getCprNumber().equals(user.getCprNumber())){
                     return accountInfo.getAccountId();
                 }
             }
+
             return bank.createAccountWithBalance(user,new BigDecimal(int1));
 
 

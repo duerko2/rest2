@@ -2,10 +2,12 @@ package com.example.cucumber;
 
 import com.example.MyBankService;
 import com.example.DTUPayService;
+import dtu.ws.fastmoney.BankServiceException_Exception;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.After;
 
 import java.math.BigDecimal;
 
@@ -29,8 +31,10 @@ public class DTUPaySoapSteps {
     MyBankService myBankService = new MyBankService();
     DTUPayService dtuPayService = new DTUPayService();
 
+
+
     @Given("a customer with a bank account with balance {int}")
-    public void a_customer_with_a_bank_account_with_balance(int int1) {
+    public void a_customer_with_a_bank_account_with_balance(int int1) throws BankServiceException_Exception {
         // Write code here that turns the phrase above into concrete actions
         customerBankId = myBankService.createAccount(customerName, customerLastName, customerCPR,int1);
         assertTrue(myBankService.getAccount(customerBankId).getBalance().equals(new BigDecimal(int1)));
@@ -58,9 +62,10 @@ public class DTUPaySoapSteps {
     }
 
     @When("the merchant initiates a payment for {int} kr by the customer")
-    public void the_merchant_initiates_a_payment_for_kr_by_the_customer(int int1) {
+    public void the_merchant_initiates_a_payment_for_kr_by_the_customer(Integer int1) {
         // Write code here that turns the phrase above into concrete actions
         successful = dtuPayService.pay(int1, merchantDTUPayId, customerDTUPayId);
+
 
     }
 
@@ -71,15 +76,15 @@ public class DTUPaySoapSteps {
     }
 
     @Then("the balance of the customer at the bank is {int} kr")
-    public void the_balance_of_the_customer_at_the_bank_is_kr(int int1) {
+    public void the_balance_of_the_customer_at_the_bank_is_kr(Integer int1) {
         // Write code here that turns the phrase above into concrete actions
-        assertEquals(int1, myBankService.getAccount(customerBankId).getBalance());
+        assertEquals(BigDecimal.valueOf(int1), myBankService.getAccount(customerBankId).getBalance());
     }
 
     @Then("the balance of the merchant at the bank is {int} kr")
-    public void the_balance_of_the_merchant_at_the_bank_is_kr(int int1) {
+    public void the_balance_of_the_merchant_at_the_bank_is_kr(Integer int1) {
         // Write code here that turns the phrase above into concrete action
-        assertEquals(int1, myBankService.getAccount(merchantBankId).getBalance());
+        assertEquals(BigDecimal.valueOf(int1), myBankService.getAccount(merchantBankId).getBalance());
 
     }
 
@@ -89,6 +94,7 @@ public class DTUPaySoapSteps {
             myBankService.deleteAccount(customerBankId);
             myBankService.deleteAccount(merchantBankId);
         } catch (Exception e) {
+
         }
     }
 }

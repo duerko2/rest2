@@ -2,6 +2,7 @@ package com.example.cucumber;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /* Important:
@@ -15,4 +16,5 @@ Maven.
 @CucumberOptions(plugin = "summary", publish = false, features = "features" // directory of the feature files
 )
 public class CucumberTest {
+
 }
