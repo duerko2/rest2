@@ -1,9 +1,6 @@
 package com.example;
 
 
-
-
-
 import dtu.ws.fastmoney.*;
 import dtu.ws.fastmoney.Account;
 
@@ -24,18 +21,17 @@ public class MyBankService {
         user.setLastName(lastname);
 
         try {
+            // Returns bank account if exists
             List<AccountInfo> accountInfoList = bank.getAccounts();
-            for (AccountInfo accountInfo : accountInfoList){
-                if(accountInfo.getUser().getCprNumber().equals(user.getCprNumber())){
+            for (AccountInfo accountInfo : accountInfoList) {
+                if (accountInfo.getUser().getCprNumber().equals(user.getCprNumber())) {
                     return accountInfo.getAccountId();
                 }
             }
 
-            return bank.createAccountWithBalance(user,new BigDecimal(int1));
-
-
+            return bank.createAccountWithBalance(user, new BigDecimal(int1));
         } catch (BankServiceException_Exception e) {
-            return "NO ACCOUNT CREATED"+e.getMessage();
+            return "NO ACCOUNT CREATED" + e.getMessage();
         }
     }
 

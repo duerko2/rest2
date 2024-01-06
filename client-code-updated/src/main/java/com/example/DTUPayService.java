@@ -22,7 +22,6 @@ public class DTUPayService {
                 Response res = target.path("/account")
                 .request()
                 .post(Entity.entity(account, "application/json"));
-        System.out.println(res.getStatus());
 
         if (res.getStatus() == 200) {
             status = "Complete";

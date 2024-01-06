@@ -81,7 +81,6 @@ public class DTUPaySoapSteps {
     @When("the merchant initiates a payment for {int} kr by the customer")
     public void the_merchant_initiates_a_payment_for_kr_by_the_customer(Integer int1) {
         // Write code here that turns the phrase above into concrete actions
-        System.out.println(merchantDTUPayId+ " "+ customerDTUPayId);
         successful = dtuPayService.pay(int1, merchantDTUPayId, customerDTUPayId);
 
 

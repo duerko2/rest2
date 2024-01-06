@@ -10,7 +10,7 @@ Feature: Payment
     And the balance of the customer at the bank is 900 kr
     And the balance of the merchant at the bank is 2100 kr
 
-  Scenario:
+  Scenario: Payment without bank account
     Given a customer without a bank account
     And that the customer is registered with DTU Pay
     Given a merchant with a bank account with balance 2000
@@ -20,7 +20,7 @@ Feature: Payment
     And the balance of the merchant at the bank is 2000 kr
 
 
-  Scenario:
+  Scenario: Payment without DTUPay account
     Given a customer with a bank account with balance 1000
     And that the customer is not registered with DTU Pay
     Given a merchant with a bank account with balance 2000
@@ -31,8 +31,8 @@ Feature: Payment
     And the balance of the merchant at the bank is 2000 kr
 
 
-    Scenario:
-      Given a customer with a bank account with balance 1000
-      And that the customer is registered with DTU Pay
-      When a customer tries to create a new DTU Pay account
-      Then it returns an error saying "that account already exists"
+  Scenario: Double DTU Pay account creation
+    Given a customer with a bank account with balance 1000
+    And that the customer is registered with DTU Pay
+    When a customer tries to create a new DTU Pay account
+    Then it returns an error saying "that account already exists"
