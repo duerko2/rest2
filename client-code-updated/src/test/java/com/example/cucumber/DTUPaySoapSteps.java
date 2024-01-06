@@ -32,11 +32,10 @@ public class DTUPaySoapSteps {
     DTUPayService dtuPayService = new DTUPayService();
 
 
-
     @Given("a customer with a bank account with balance {int}")
     public void a_customer_with_a_bank_account_with_balance(int int1) throws BankServiceException_Exception {
         // Write code here that turns the phrase above into concrete actions
-        customerBankId = myBankService.createAccount(customerName, customerLastName, customerCPR,int1);
+        customerBankId = myBankService.createAccount(customerName, customerLastName, customerCPR, int1);
         assertTrue(myBankService.getAccount(customerBankId).getBalance().equals(new BigDecimal(int1)));
     }
 
@@ -48,7 +47,7 @@ public class DTUPaySoapSteps {
     }
 
     @Given("a merchant with a bank account with balance {int}")
-    public void a_merchant_with_a_bank_account_with_balance(int int1)  {
+    public void a_merchant_with_a_bank_account_with_balance(int int1) {
         // Write code here that turns the phrase above into concrete actions
         merchantBankId = myBankService.createAccount(merchantName, merchantLastName, merchantCPR, int1);
         assertTrue(myBankService.getAccount(merchantBankId).getBalance().equals(new BigDecimal(int1)));
@@ -96,5 +95,16 @@ public class DTUPaySoapSteps {
         } catch (Exception e) {
 
         }
+    }
+    @Given("a customer without a bank account")
+    public void a_customer_without_a_bank_account() {
+        // Write code here that turns the phrase above into concrete actions
+        customerBankId = "Quark" ;
+    }
+
+    @Then("the payment is not successful")
+    public void the_payment_is_not_successful() {
+        // Write code here that turns the phrase above into concrete actions
+        assertFalse(successful);
     }
 }
