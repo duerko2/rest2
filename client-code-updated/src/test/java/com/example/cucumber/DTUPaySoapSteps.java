@@ -30,6 +30,24 @@ public class DTUPaySoapSteps {
 
     MyBankService myBankService = new MyBankService();
     DTUPayService dtuPayService = new DTUPayService();
+    /*
+    @Before
+    public void setup(){
+        customerName = "name";
+        customerLastName = "lastname";
+        customerCPR = "customerCPR";
+        merchantName = "merchantName";
+        merchantLastName = "merchantlastname";
+        merchantCPR = "merchantCPR";
+        customerBankId=null;
+        customerDTUPayId=null;
+        merchantBankId=null;
+        merchantDTUPayId=null;
+
+
+    }
+
+     */
 
 
     @Given("a customer with a bank account with balance {int}")
@@ -43,7 +61,7 @@ public class DTUPaySoapSteps {
     public void that_the_customer_is_registered_with_dtu_pay() throws NoSuchFieldException {
         // Write code here that turns the phrase above into concrete actions
         customerDTUPayId = dtuPayService.createAccount(customerName, customerLastName, customerCPR, customerBankId);
-        assertNotNull(dtuPayService.getAccount(customerDTUPayId));
+        assertEquals(customerDTUPayId,dtuPayService.getAccount(customerDTUPayId).getCpr());
     }
 
     @Given("a merchant with a bank account with balance {int}")
@@ -57,12 +75,13 @@ public class DTUPaySoapSteps {
     public void that_the_merchant_is_registered_with_dtu_pay() throws NoSuchFieldException {
         // Write code here that turns the phrase above into concrete actions
         merchantDTUPayId = dtuPayService.createAccount(merchantName, merchantLastName, merchantCPR, merchantBankId);
-        assertNotNull(dtuPayService.getAccount(merchantDTUPayId));
+        assertEquals(merchantDTUPayId,dtuPayService.getAccount(merchantDTUPayId).getCpr());
     }
 
     @When("the merchant initiates a payment for {int} kr by the customer")
     public void the_merchant_initiates_a_payment_for_kr_by_the_customer(Integer int1) {
         // Write code here that turns the phrase above into concrete actions
+        System.out.println(merchantDTUPayId+ " "+ customerDTUPayId);
         successful = dtuPayService.pay(int1, merchantDTUPayId, customerDTUPayId);
 
 
@@ -91,10 +110,19 @@ public class DTUPaySoapSteps {
     public void cleanUp() {
         try {
             myBankService.deleteAccount(customerBankId);
-            myBankService.deleteAccount(merchantBankId);
+
+            
         } catch (Exception e) {
 
         }
+        try{
+            myBankService.deleteAccount(merchantBankId);
+
+        } catch (Exception e){
+
+        }
+        dtuPayService.deleteDTUPayAccount(customerCPR);
+        dtuPayService.deleteDTUPayAccount(merchantCPR);
     }
     @Given("a customer without a bank account")
     public void a_customer_without_a_bank_account() {
@@ -111,6 +139,18 @@ public class DTUPaySoapSteps {
     public void that_the_customer_is_not_registered_with_dtu_pay() {
         // Write code here that turns the phrase above into concrete actions
 
-        assertNull(dtuPayService.getAccount(customerDTUPayId));
+        assertThrows(NoSuchFieldException.class,() ->{
+            dtuPayService.getAccount(customerDTUPayId);
+        });
+    }
+    @When("a customer tries to create a new DTU Pay account")
+    public void a_customer_tries_to_create_a_new_dtu_pay_account() throws NoSuchFieldException {
+        // Write code here that turns the phrase above into concrete actions
+        customerDTUPayId = dtuPayService.createAccount(customerName, customerLastName, customerCPR, customerBankId);
+    }
+    @Then("it returns an error saying {string}")
+    public void it_returns_an_error_saying(String string) {
+        // Write code here that turns the phrase above into concrete actions
+        assertEquals(string , dtuPayService.getStatus());
     }
 }

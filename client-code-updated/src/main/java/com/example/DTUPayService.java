@@ -5,7 +5,6 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-import org.jboss.resteasy.spi.NotImplementedYetException;
 
 public class DTUPayService {
 
@@ -20,10 +19,7 @@ public class DTUPayService {
         account.setCpr(s);
         account.setBankId(customerBankId);
 
-        var n = Entity.entity(account, "application/json");
-        System.out.println(n.toString());
-
-        Response res = target.path("/account")
+                Response res = target.path("/account")
                 .request()
                 .post(Entity.entity(account, "application/json"));
         System.out.println(res.getStatus());
@@ -33,12 +29,12 @@ public class DTUPayService {
             var returnValue = res.readEntity(String.class);
             return returnValue;
         } else {
-            status = res.readEntity(String.class);
-            throw new NoSuchFieldException();
+            status="that account already exists";
+            return res.readEntity(String.class);
         }
     }
 
-    public Account getAccount(String customerDTUPayId) {
+    public Account getAccount(String customerDTUPayId) throws NoSuchFieldException {
         Response res = target.path("/account/"+customerDTUPayId)
                 .request()
                 .get();
@@ -48,7 +44,7 @@ public class DTUPayService {
             return res.readEntity(Account.class);
         } else {
             status = "error";
-            return null;
+            throw new NoSuchFieldException("Account doesn't exist");
         }
 
     }
@@ -68,5 +64,11 @@ public class DTUPayService {
             return false;
         }
     }
+    public void deleteDTUPayAccount(String cpr) {
+        Response res = target.path("/account/"+ cpr).request().delete();
+    }
 
+    public String getStatus() {
+        return status;
+    }
 }

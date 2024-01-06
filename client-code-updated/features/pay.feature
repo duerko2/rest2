@@ -29,3 +29,10 @@ Feature: Payment
     Then the payment is not successful
     And the balance of the customer at the bank is 1000 kr
     And the balance of the merchant at the bank is 2000 kr
+
+
+    Scenario:
+      Given a customer with a bank account with balance 1000
+      And that the customer is registered with DTU Pay
+      When a customer tries to create a new DTU Pay account
+      Then it returns an error saying "that account already exists"
