@@ -107,4 +107,10 @@ public class DTUPaySoapSteps {
         // Write code here that turns the phrase above into concrete actions
         assertFalse(successful);
     }
+    @Given("that the customer is not registered with DTU Pay")
+    public void that_the_customer_is_not_registered_with_dtu_pay() {
+        // Write code here that turns the phrase above into concrete actions
+
+        assertNull(dtuPayService.getAccount(customerDTUPayId));
+    }
 }
