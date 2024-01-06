@@ -78,13 +78,13 @@ public class DTUPaySoapSteps {
     @Then("the balance of the customer at the bank is {int} kr")
     public void the_balance_of_the_customer_at_the_bank_is_kr(Integer int1) {
         // Write code here that turns the phrase above into concrete actions
-        assertEquals(int1, myBankService.getAccount(customerBankId).getBalance());
+        assertEquals(BigDecimal.valueOf(int1), myBankService.getAccount(customerBankId).getBalance());
     }
 
     @Then("the balance of the merchant at the bank is {int} kr")
     public void the_balance_of_the_merchant_at_the_bank_is_kr(Integer int1) {
         // Write code here that turns the phrase above into concrete action
-        assertEquals(int1, myBankService.getAccount(merchantBankId).getBalance());
+        assertEquals(BigDecimal.valueOf(int1), myBankService.getAccount(merchantBankId).getBalance());
 
     }
 
