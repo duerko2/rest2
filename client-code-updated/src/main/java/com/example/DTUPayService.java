@@ -10,40 +10,37 @@ public class DTUPayService {
 
     ResteasyClient client = (ResteasyClient) ResteasyClientBuilder.newClient();
     ResteasyWebTarget target = client.target("http://localhost:8080");
-    String status = "";
 
-    public String createAccount(String name, String lastname, String s, String customerBankId) throws NoSuchFieldException {
+    public String createAccount(String name, String lastname, String s, String customerBankId) throws AccountAlreadyExistsException {
         Account account = new Account();
         account.setName(name);
         account.setLastname(lastname);
         account.setCpr(s);
         account.setBankId(customerBankId);
 
-                Response res = target.path("/account")
+        Response res = target.path("/account")
                 .request()
                 .post(Entity.entity(account, "application/json"));
 
-        if (res.getStatus() == 200) {
-            status = "Complete";
-            var returnValue = res.readEntity(String.class);
-            return returnValue;
-        } else {
-            status="that account already exists";
-            return res.readEntity(String.class);
+        switch (res.getStatus()) {
+            case 200:
+                return res.readEntity(String.class);
+            case 409:
+                throw new AccountAlreadyExistsException("that account already exists");
+            default:
+                return null;
         }
     }
 
-    public Account getAccount(String customerDTUPayId) throws NoSuchFieldException {
-        Response res = target.path("/account/"+customerDTUPayId)
+    public Account getAccount(String customerDTUPayId) throws NoSuchAccountException {
+        Response res = target.path("/account/" + customerDTUPayId)
                 .request()
                 .get();
 
         if (res.getStatus() == 200) {
-            status = "Complete";
             return res.readEntity(Account.class);
         } else {
-            status = "error";
-            throw new NoSuchFieldException("Account doesn't exist");
+            throw new NoSuchAccountException("Account doesn't exist");
         }
 
     }
@@ -56,18 +53,14 @@ public class DTUPayService {
                 .post(Entity.entity(payment, "application/json"));
 
         if (res.getStatus() == 200) {
-            status = "Complete";
             return true;
         } else {
-            status = res.readEntity(String.class);
             return false;
         }
     }
+
     public void deleteDTUPayAccount(String cpr) {
-        Response res = target.path("/account/"+ cpr).request().delete();
+        Response res = target.path("/account/" + cpr).request().delete();
     }
 
-    public String getStatus() {
-        return status;
-    }
 }

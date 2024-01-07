@@ -30,9 +30,8 @@ public class AccountResource {
             String accountId = accountService.createAccount(account);
             return Response.ok(accountId).build();
         } catch (CustomerAlreadyExists e) {
-            return Response.status(400).entity(account.getCpr()).build();
+            return Response.status(409).entity(account.getCpr()).build();
         }
-
     }
     @DELETE
     @Path("/{cpr}")

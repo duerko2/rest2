@@ -1,7 +1,9 @@
 package com.example.cucumber;
 
+import com.example.AccountAlreadyExistsException;
 import com.example.MyBankService;
 import com.example.DTUPayService;
+import com.example.NoSuchAccountException;
 import dtu.ws.fastmoney.BankServiceException_Exception;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -30,25 +32,6 @@ public class DTUPaySoapSteps {
 
     MyBankService myBankService = new MyBankService();
     DTUPayService dtuPayService = new DTUPayService();
-    /*
-    @Before
-    public void setup(){
-        customerName = "name";
-        customerLastName = "lastname";
-        customerCPR = "customerCPR";
-        merchantName = "merchantName";
-        merchantLastName = "merchantlastname";
-        merchantCPR = "merchantCPR";
-        customerBankId=null;
-        customerDTUPayId=null;
-        merchantBankId=null;
-        merchantDTUPayId=null;
-
-
-    }
-
-     */
-
 
     @Given("a customer with a bank account with balance {int}")
     public void a_customer_with_a_bank_account_with_balance(int int1) throws BankServiceException_Exception {
@@ -58,7 +41,7 @@ public class DTUPaySoapSteps {
     }
 
     @Given("that the customer is registered with DTU Pay")
-    public void that_the_customer_is_registered_with_dtu_pay() throws NoSuchFieldException {
+    public void that_the_customer_is_registered_with_dtu_pay() throws NoSuchAccountException, AccountAlreadyExistsException {
         // Write code here that turns the phrase above into concrete actions
         customerDTUPayId = dtuPayService.createAccount(customerName, customerLastName, customerCPR, customerBankId);
         assertEquals(customerDTUPayId,dtuPayService.getAccount(customerDTUPayId).getCpr());
@@ -72,7 +55,7 @@ public class DTUPaySoapSteps {
     }
 
     @Given("that the merchant is registered with DTU Pay")
-    public void that_the_merchant_is_registered_with_dtu_pay() throws NoSuchFieldException {
+    public void that_the_merchant_is_registered_with_dtu_pay() throws NoSuchAccountException, AccountAlreadyExistsException {
         // Write code here that turns the phrase above into concrete actions
         merchantDTUPayId = dtuPayService.createAccount(merchantName, merchantLastName, merchantCPR, merchantBankId);
         assertEquals(merchantDTUPayId,dtuPayService.getAccount(merchantDTUPayId).getCpr());
@@ -82,8 +65,6 @@ public class DTUPaySoapSteps {
     public void the_merchant_initiates_a_payment_for_kr_by_the_customer(Integer int1) {
         // Write code here that turns the phrase above into concrete actions
         successful = dtuPayService.pay(int1, merchantDTUPayId, customerDTUPayId);
-
-
     }
 
     @Then("the payment is successful")
@@ -105,24 +86,6 @@ public class DTUPaySoapSteps {
 
     }
 
-    @After
-    public void cleanUp() {
-        try {
-            myBankService.deleteAccount(customerBankId);
-
-            
-        } catch (Exception e) {
-
-        }
-        try{
-            myBankService.deleteAccount(merchantBankId);
-
-        } catch (Exception e){
-
-        }
-        dtuPayService.deleteDTUPayAccount(customerCPR);
-        dtuPayService.deleteDTUPayAccount(merchantCPR);
-    }
     @Given("a customer without a bank account")
     public void a_customer_without_a_bank_account() {
         // Write code here that turns the phrase above into concrete actions
@@ -137,19 +100,35 @@ public class DTUPaySoapSteps {
     @Given("that the customer is not registered with DTU Pay")
     public void that_the_customer_is_not_registered_with_dtu_pay() {
         // Write code here that turns the phrase above into concrete actions
-
-        assertThrows(NoSuchFieldException.class,() ->{
+        assertThrows(NoSuchAccountException.class,() ->{
             dtuPayService.getAccount(customerDTUPayId);
         });
     }
     @When("a customer tries to create a new DTU Pay account")
-    public void a_customer_tries_to_create_a_new_dtu_pay_account() throws NoSuchFieldException {
+    public void a_customer_tries_to_create_a_new_dtu_pay_account() {
         // Write code here that turns the phrase above into concrete actions
-        customerDTUPayId = dtuPayService.createAccount(customerName, customerLastName, customerCPR, customerBankId);
+        try{
+            customerDTUPayId = dtuPayService.createAccount(customerName, customerLastName, customerCPR, customerBankId);
+        } catch (AccountAlreadyExistsException e) {
+            customerDTUPayId = e.getMessage();
+        }
     }
     @Then("it returns an error saying {string}")
     public void it_returns_an_error_saying(String string) {
         // Write code here that turns the phrase above into concrete actions
-        assertEquals(string , dtuPayService.getStatus());
+            assertEquals(string, customerDTUPayId);
+    }
+
+
+    @After
+    public void cleanUp() {
+        try {
+            myBankService.deleteAccount(customerBankId);
+        } catch (Exception e) {}
+        try{
+            myBankService.deleteAccount(merchantBankId);
+        } catch (Exception e){}
+        dtuPayService.deleteDTUPayAccount(customerCPR);
+        dtuPayService.deleteDTUPayAccount(merchantCPR);
     }
 }
