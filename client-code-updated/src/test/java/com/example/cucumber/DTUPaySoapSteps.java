@@ -29,6 +29,7 @@ public class DTUPaySoapSteps {
     String merchantBankId;
     String merchantDTUPayId;
     boolean successful;
+    String errorMessage;
 
     MyBankService myBankService = new MyBankService();
     DTUPayService dtuPayService = new DTUPayService();
@@ -44,7 +45,7 @@ public class DTUPaySoapSteps {
     public void that_the_customer_is_registered_with_dtu_pay() throws NoSuchAccountException, AccountAlreadyExistsException {
         // Write code here that turns the phrase above into concrete actions
         customerDTUPayId = dtuPayService.createAccount(customerName, customerLastName, customerCPR, customerBankId);
-        assertEquals(customerDTUPayId,dtuPayService.getAccount(customerDTUPayId).getCpr());
+        assertEquals(customerDTUPayId,dtuPayService.getAccount(customerDTUPayId).getAccountId());
     }
 
     @Given("a merchant with a bank account with balance {int}")
@@ -58,7 +59,7 @@ public class DTUPaySoapSteps {
     public void that_the_merchant_is_registered_with_dtu_pay() throws NoSuchAccountException, AccountAlreadyExistsException {
         // Write code here that turns the phrase above into concrete actions
         merchantDTUPayId = dtuPayService.createAccount(merchantName, merchantLastName, merchantCPR, merchantBankId);
-        assertEquals(merchantDTUPayId,dtuPayService.getAccount(merchantDTUPayId).getCpr());
+        assertEquals(merchantDTUPayId,dtuPayService.getAccount(merchantDTUPayId).getAccountId());
     }
 
     @When("the merchant initiates a payment for {int} kr by the customer")
@@ -110,13 +111,13 @@ public class DTUPaySoapSteps {
         try{
             customerDTUPayId = dtuPayService.createAccount(customerName, customerLastName, customerCPR, customerBankId);
         } catch (AccountAlreadyExistsException e) {
-            customerDTUPayId = e.getMessage();
+            errorMessage = e.getMessage();
         }
     }
     @Then("it returns an error saying {string}")
     public void it_returns_an_error_saying(String string) {
         // Write code here that turns the phrase above into concrete actions
-            assertEquals(string, customerDTUPayId);
+            assertEquals(string, errorMessage);
     }
 
 
@@ -128,7 +129,7 @@ public class DTUPaySoapSteps {
         try{
             myBankService.deleteAccount(merchantBankId);
         } catch (Exception e){}
-        dtuPayService.deleteDTUPayAccount(customerCPR);
-        dtuPayService.deleteDTUPayAccount(merchantCPR);
+        dtuPayService.deleteDTUPayAccount(customerDTUPayId);
+        dtuPayService.deleteDTUPayAccount(merchantDTUPayId);
     }
 }

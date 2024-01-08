@@ -18,7 +18,7 @@ public class DTUPayService {
         account.setCpr(s);
         account.setBankId(customerBankId);
 
-        Response res = target.path("/account")
+        Response res = target.path("/accounts")
                 .request()
                 .post(Entity.entity(account, "application/json"));
 
@@ -33,7 +33,7 @@ public class DTUPayService {
     }
 
     public Account getAccount(String customerDTUPayId) throws NoSuchAccountException {
-        Response res = target.path("/account/" + customerDTUPayId)
+        Response res = target.path("/accounts/" + customerDTUPayId)
                 .request()
                 .get();
 
@@ -48,7 +48,7 @@ public class DTUPayService {
     public boolean pay(int amount, String merchant, String customer) {
 
         Payment payment = new Payment(amount, merchant, customer);
-        Response res = target.path("/payment")
+        Response res = target.path("/payments")
                 .request()
                 .post(Entity.entity(payment, "application/json"));
 
@@ -59,8 +59,8 @@ public class DTUPayService {
         }
     }
 
-    public void deleteDTUPayAccount(String cpr) {
-        Response res = target.path("/account/" + cpr).request().delete();
+    public void deleteDTUPayAccount(String accountId) {
+        Response res = target.path("/accounts/" + accountId).request().delete();
     }
 
 }

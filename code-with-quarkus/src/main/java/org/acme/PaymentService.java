@@ -2,16 +2,21 @@ package org.acme;
 
 
 import dtu.ws.fastmoney.*;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class PaymentService {
 
   List<Payment> payments = new ArrayList<>();
   BankService bank = new BankServiceService().getBankServicePort();
-  AccountService accountService = new AccountService();
+  @Inject
+  AccountService accountService;
 
 
   public void addPayment(Payment p) {

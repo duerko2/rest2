@@ -1,14 +1,17 @@
 package org.acme;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/account")
+
+@Path("/accounts")
 
 public class AccountResource {
-    AccountService accountService = new AccountService();
+    @Inject
+    AccountService accountService;
 
     @GET
     @Path("{accountId}")
@@ -34,9 +37,10 @@ public class AccountResource {
         }
     }
     @DELETE
-    @Path("/{cpr}")
-    public Response deleteAccount(@PathParam("cpr") String cpr) {
-        accountService.deleteAccount(cpr);
+    @Path("/{accountId}")
+    public Response deleteAccount(@PathParam("accountId") String accountId) {
+
+        accountService.deleteAccount(accountId);
         return Response.ok().build();
     }
 

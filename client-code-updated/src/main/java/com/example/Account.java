@@ -6,7 +6,15 @@ public class Account {
     private String lastname;
     private String cpr;
     private String bankId;
+    private String accountId;
 
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
 
     public String getBankId() {
         return bankId;
